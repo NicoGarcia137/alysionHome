@@ -1,0 +1,5 @@
+# Local tool settings
+.claude/
+
+# Collection backups exported from the app
+alysion-backup-*.json
