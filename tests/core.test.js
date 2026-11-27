@@ -456,3 +456,40 @@ test('backup import rejects files that are not a valid backup', () => {
   assert.throws(() => core.parseBackup(broken((b) => (b.accounts[0].cards = { 'BT1-001': { std: 'x' } }))), /quantity/);
   assert.throws(() => core.parseBackup(broken((b) => (b.cpTable.C.std.craft = 'free'))), /CP value/);
 });
+
+const COLORED = new Map(
+  [
+    ['R1', 'Red'],
+    ['B1', 'Blue'],
+    ['Y1', 'Yellow'],
+    ['W1', 'White'],
+  ].map(([id, color]) => [id, card(id, 'C', { color })]),
+);
+
+test('a deck of one color is grouped under that color', () => {
+  assert.deepEqual(core.deckColor(deck('B1*50', 'B1*4'), COLORED), { group: 'Blue', colors: ['Blue'] });
+});
+
+test('a second color counts from 10 copies, eggs included', () => {
+  assert.deepEqual(core.deckColor(deck('R1*45 B1*9'), COLORED), { group: 'Red', colors: ['Red'] });
+  assert.deepEqual(core.deckColor(deck('R1*41 B1*9', 'B1*1'), COLORED), { group: 'Multicolor', colors: ['Red', 'Blue'] });
+});
+
+test('White cards never make a deck multicolor', () => {
+  assert.deepEqual(core.deckColor(deck('Y1*30 W1*20'), COLORED), { group: 'Yellow', colors: ['Yellow'] });
+  assert.deepEqual(core.deckColor(deck('W1*50'), COLORED), { group: 'White', colors: ['White'] });
+});
+
+test('color groups follow a fixed order, skip empty ones and keep the ranking inside', () => {
+  const ranked = [
+    { deck: deck('B1*50', '', 'A', 'blue first') },
+    { deck: deck('R1*30 B1*20', '', 'A', 'mixed') },
+    { deck: deck('R1*50', '', 'A', 'red') },
+    { deck: deck('B1*50', '', 'A', 'blue second') },
+  ];
+  const groups = core.groupByColor(ranked, COLORED);
+  assert.deepEqual(
+    groups.map(({ group, results }) => [group, results.map((r) => r.deck.name)]),
+    [['Red', ['red']], ['Blue', ['blue first', 'blue second']], ['Multicolor', ['mixed']]],
+  );
+});

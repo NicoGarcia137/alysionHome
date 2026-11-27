@@ -109,6 +109,17 @@ td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
 .thumb { width: 34px; height: 48px; object-fit: cover; border-radius: 3px; background: var(--placeholder); display: block; }
 .figure { font-size: 2rem; font-weight: 600; margin: 4px 0 12px; }
 
+.color-group { margin-bottom: 16px; }
+.color-group > summary { margin-bottom: 8px; cursor: pointer; font: 600 1.15rem var(--display); }
+.swatch { display: inline-block; width: 14px; height: 14px; margin: 0 8px; border: 1px solid var(--muted); border-radius: 3px; }
+.swatch.red { background: #d63a3a; }
+.swatch.blue { background: #2273d9; }
+.swatch.yellow { background: #f2c418; }
+.swatch.green { background: #1f9d55; }
+.swatch.black { background: #23262e; }
+.swatch.purple { background: #7c47b8; }
+.swatch.white { background: #f4f6fa; }
+.swatch.multicolor { background: conic-gradient(#d63a3a, #f2c418, #1f9d55, #2273d9, #7c47b8, #d63a3a); }
 .deck { margin-bottom: 8px; }
 .deck > button { display: grid; grid-template-columns: 34px minmax(0, 1.2fr) minmax(0, 2fr) minmax(0, 130px) 90px;align-items: center; gap: 14px; width: 100%; border: 0; border-radius: 6px; padding: 10px 14px; text-align: left; }
 .tier { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 4px; background: var(--solid); color: #fff; font-weight: 700; }

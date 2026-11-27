@@ -12,7 +12,7 @@ Double-click `index.html`. Card images need an internet connection; everything e
 |---|---|
 | Library | Record the copies you own. `+` and `−` change standard copies; click a card to edit Shiny and alternate art versions; or paste a list. |
 | Disassemble | See which copies beyond 4 you can disassemble and the CP they would give. It only informs: your quantities change only when you edit them. |
-| Decks | See which decks are `Ready`, `Craftable` or `Not yet`. Opening one shows its cards as pictures and, for each missing card, similar cards the account can use instead. |
+| Decks | Decks are grouped by color, with a Multicolor group. See which decks are `Ready`, `Craftable` or `Not yet`. Opening one shows its cards as pictures and, for each missing card, similar cards the account can use instead. |
 | Packs | See which booster is expected to give the account the most for a goal, and why. |
 | Staples | See the recommended cards you are missing. |
 | Settings | Rename accounts, back up your data, correct CP values. |

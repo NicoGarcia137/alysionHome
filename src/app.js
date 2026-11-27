@@ -27,6 +27,7 @@
     openDeck: null,
     tier: '',
     source: '',
+    closedColors: new Set(),
     packTarget: 'meta',
     packDeck: '',
     packOpen: '',
@@ -473,8 +474,9 @@
     }, [['', 'All tiers'], ['S', 'Tier S'], ['A', 'Tier A'], ['B', 'Tier B'], ['C', 'Tier C'], ['none', 'Unranked']].map(([value, text]) =>
       el('option', { value, selected: ui.tier === value }, text)));
 
-    const decks = list.map((result) => {
+    const row = (result) => {
       const { deck } = result;
+      const { colors } = Core.deckColor(deck, cards);
       const open = ui.openDeck === deck.id;
       // Computed only for the open deck: there are a few hundred decks.
       const others = () => `Cards owned by account: ${state.accounts.map((entry) => `${entry.name} ${percent(deck, entry)}%`).join(', ')}`;
@@ -490,7 +492,7 @@
           },
         },
           el('span', { class: 'tier', title: deck.tier ? `Tier ${deck.tier}` : 'Unranked' }, deck.tier || '–'),
-          el('span', { class: 'deck-name' }, el('b', {}, deck.name), el('small', {}, `${Math.floor((result.owned / result.required) * 100)}%: ${result.owned} of ${result.required} cards, ${sourceOf(deck)}`)),
+          el('span', { class: 'deck-name' }, el('b', {}, deck.name), el('small', {}, `${Math.floor((result.owned / result.required) * 100)}%: ${result.owned} of ${result.required} cards, ${sourceOf(deck)}${colors.length > 1 ? `, ${colors.join(' / ')}` : ''}`)),
           el('span', { class: 'gauge', 'aria-hidden': 'true' },
             Array.from({ length: result.required }, (_, i) => el('i', { class: i < result.owned ? 'on' : null }))),
           el('span', { class: 'cost' }, result.status === 'ready' ? '' : `${number(result.craftCp)} CP${result.uncraftable ? ` + ${result.uncraftable} uncraftable` : ''}`),
@@ -498,13 +500,28 @@
         ),
         open ? deckDetail(result, others()) : null,
       );
-    });
+    };
+
+    const groups = Core.groupByColor(list, cards).map(({ group, results }) =>
+      el('details', {
+        class: 'color-group',
+        open: !ui.closedColors.has(group),
+        ontoggle: (e) => {
+          if (e.target.open) ui.closedColors.delete(group);
+          else ui.closedColors.add(group);
+        },
+      },
+        el('summary', {},
+          el('span', { class: `swatch ${group.toLowerCase()}`, 'aria-hidden': 'true' }),
+          `${group} (${results.length})`),
+        results.map(row),
+      ));
 
     return [
       el('h2', {}, `Decks for ${account().name}`),
-      el('p', { class: 'hint' }, 'Ordered from the highest to the lowest share of cards you own. Craftable means your CP balance, plus what you could get by disassembling surplus, covers every missing card. Each deck is judged on its own.'),
+      el('p', { class: 'hint' }, 'Grouped by color and, inside each group, ordered from the highest to the lowest share of cards you own. A deck is Multicolor when a second color has 10 or more copies; White does not count. Craftable means your CP balance, plus what you could get by disassembling surplus, covers every missing card. Each deck is judged on its own.'),
       el('div', { class: 'toolbar' }, filter, sourceFilter),
-      ...(decks.length ? decks : [el('p', { class: 'empty' }, 'No decks match these filters.')]),
+      ...(groups.length ? groups : [el('p', { class: 'empty' }, 'No decks match these filters.')]),
     ];
   }
 

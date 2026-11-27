@@ -152,6 +152,35 @@
       );
   }
 
+  const DECK_COLORS = ['Red', 'Blue', 'Yellow', 'Green', 'Black', 'Purple', 'White'];
+  // A second color makes a deck multicolor from this many copies; fewer is a splash.
+  const MIX_COPIES = 10;
+
+  // The color a deck is listed under, plus the colors it is built on. White cards fit
+  // any deck, so they only name one that has no other color.
+  function deckColor(deck, cards) {
+    const copies = new Map();
+    for (const { id, qty } of parseDeckCards(`${deck.main} ${deck.eggs}`)) {
+      const color = cards.get(id)?.color;
+      if (color) copies.set(color, (copies.get(color) || 0) + qty);
+    }
+    const ordered = [...copies]
+      .sort((a, b) => b[1] - a[1] || DECK_COLORS.indexOf(a[0]) - DECK_COLORS.indexOf(b[0]));
+    const others = ordered.filter(([color]) => color !== 'White');
+    const colors = (others.length ? others : ordered)
+      .filter(([, qty], index) => index === 0 || qty >= MIX_COPIES)
+      .map(([color]) => color);
+    return { group: colors.length > 1 ? 'Multicolor' : colors[0], colors };
+  }
+
+  // Splits ranked decks into color groups, keeping the ranking inside each one.
+  function groupByColor(ranked, cards) {
+    const entries = ranked.map((result) => ({ result, group: deckColor(result.deck, cards).group }));
+    return [...DECK_COLORS, 'Multicolor']
+      .map((group) => ({ group, results: entries.filter((entry) => entry.group === group).map((entry) => entry.result) }))
+      .filter(({ results }) => results.length);
+  }
+
   const VERSION_WORDS = {
     standard: 'std',
     std: 'std',
@@ -452,6 +481,8 @@
     deckSize,
     evaluateDeck,
     rankDecks,
+    deckColor,
+    groupByColor,
     deckSections,
     substitutes,
     neededCopies,

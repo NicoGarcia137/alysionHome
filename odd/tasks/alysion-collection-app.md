@@ -98,6 +98,11 @@ Three accounts, default names `Account 1` to `Account 3`, renameable. Each has i
 - Rates from the Game8 pack pages (626090, 626112, 626115, 626116); card pool from `acquisition_info` in the card data.
 - Assumptions: cards of one rarity are equally likely; value = craft CP of needed cards expected in a 10-pack purchase; alternate art draws are not counted.
 
+### S10 Decks by color (added 2026-11-27)
+"ademas ahora tratar de agrupar los decks por color , ademas de agregar una categoria de multicolor en caso de que hubiera"
+- The Decks tab lists collapsible color groups (Red, Blue, Yellow, Green, Black, Purple, White, Multicolor), empty ones hidden; inside each, the S4 order stays. Tier and source filters still apply.
+- Assumption: a deck is Multicolor when a second non-White color has 10 or more copies (main and eggs); fewer is a splash. A multicolor deck shows its colors.
+
 ### S6 Backup
 Data is saved in the browser. Export and import one JSON file with all accounts; import asks before replacing. The app shows when the last export happened.
 
@@ -111,6 +116,7 @@ Data is saved in the browser. Export and import one JSON file with all accounts;
 - T2 Logic core with tests (S1-S6) — inline — done, RED (module missing) then GREEN 20/20
 - T3 Interface (S1-S6) — inline — done
 - T4 Browser verification (acceptance checks) — inline — done, see L7
+- T5 Color groups (S10) — inline — done, RED 4 failing, GREEN 52/52, seen in the browser pane; commit "feat: group decks by color" on branch feat/deck-color-groups
 
 ## Log
 
@@ -141,3 +147,5 @@ Data is saved in the browser. Export and import one JSON file with all accounts;
 - L22 (2026-11-27, S9): Packs tab. RED 7 failing, GREEN 48/48; card data refreshed with pack names, other fields unchanged; rendered with a DOM stand-in, not a browser.
 - L23 (2026-11-27): "subir esto a un repositorio de github de mi cuenta con mi mail franconicolas.garcia@gmail.com que sea alysionHome el nombre". Local git repository created; commit author email set for this repository only.
 - L24 (2026-11-27): "ya deje mi cuenta abierta en el navegador pero revisa que sea mi mail personal y no el mail de moby mi empresa laboral el de github", "En mi Chrome". Verified in Chrome: account NicoGarcia137 lists the personal email and no work email. Private repository NicoGarcia137/alysionHome created; commit author set to that account.
+- Push verified (2026-11-27): commit 3b46693 is on NicoGarcia137/alysionHome `main`, remote head equals local.
+- L25 (2026-11-27, S10): "ademas ahora tratar de agrupar los decks por color , ademas de agregar una categoria de multicolor en caso de que hubiera". Done: 204 decks give Red 41, Blue 42, Yellow 20, Green 27, Black 32, Purple 24, Multicolor 18, no White group. Groups, collapse and opening a deck checked in the browser pane (dark theme) with the main account list. Risk: none. Review assessment: medium, under budget.
